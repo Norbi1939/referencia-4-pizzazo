@@ -1146,6 +1146,8 @@ img{
     padding-right:30px;
 
     display:flex;
+    flex-shrink:0;
+    white-space:nowrap;
 
     align-items:center;
 
@@ -1162,6 +1164,7 @@ img{
 .marquee-dot{
     width:5px;
     height:5px;
+    flex-shrink:0;
 
     border-radius:50%;
 
@@ -2577,6 +2580,360 @@ footer{
     transform:scale(1.025);
 }
 
+
+/* ==========================================================
+   MOBILE RESPONSIVE FINISH
+   Csak a mobilos elrendezest pontosítja; az animációkhoz,
+   színekhez és az asztali nézethez nem nyúl.
+========================================================== */
+
+@media (max-width:850px){
+    html{
+        -webkit-text-size-adjust:100%;
+        text-size-adjust:100%;
+        scroll-padding-top:74px;
+    }
+
+    body{
+        width:100%;
+    }
+
+    .nav{
+        padding-top:env(safe-area-inset-top);
+        height:calc(74px + env(safe-area-inset-top));
+    }
+
+    .nav.scrolled{
+        height:calc(74px + env(safe-area-inset-top));
+    }
+
+    .nav-inner{
+        min-width:0;
+    }
+
+    .nav-actions{
+        gap:0;
+    }
+
+    .menu-btn{
+        min-width:44px;
+        min-height:44px;
+        touch-action:manipulation;
+    }
+
+    .mobile-menu{
+        height:100vh;
+        height:100dvh;
+        padding-top:calc(104px + env(safe-area-inset-top));
+        padding-right:max(24px,env(safe-area-inset-right));
+        padding-bottom:max(32px,env(safe-area-inset-bottom));
+        padding-left:max(24px,env(safe-area-inset-left));
+        overflow-y:auto;
+        overscroll-behavior:contain;
+    }
+
+    .mobile-menu a{
+        width:fit-content;
+        max-width:100%;
+        line-height:1.05;
+    }
+
+    .hero,
+    .hero-layout{
+        min-height:0;
+    }
+
+    .hero-left{
+        padding-top:calc(125px + env(safe-area-inset-top));
+    }
+
+    .hero-title,
+    .story-title,
+    .menu-title,
+    .experience-copy h2,
+    .reservation h2,
+    .quote,
+    .footer-logo{
+        overflow-wrap:break-word;
+    }
+
+    .hero-buttons > *,
+    .story-trigger{
+        max-width:100%;
+    }
+
+    .hero-visual{
+        width:100%;
+        min-height:clamp(480px,86vw,650px);
+    }
+
+    .hero-photo,
+    .oven-photo{
+        width:100%;
+        height:100%;
+    }
+
+    .menu-head{
+        align-items:start;
+    }
+
+    .menu-intro,
+    .lead,
+    .reservation-copy p{
+        max-width:none;
+    }
+
+    .menu-item > div{
+        min-width:0;
+    }
+
+    .menu-item-name{
+        flex-wrap:wrap;
+    }
+
+    .oven-art{
+        min-height:clamp(480px,110vw,650px);
+    }
+
+    .booking-form{
+        width:100%;
+        min-width:0;
+    }
+
+    .field input,
+    .field select,
+    .field textarea{
+        font-size:16px;
+    }
+
+    .filter,
+    .btn{
+        touch-action:manipulation;
+    }
+}
+
+@media (max-width:560px){
+    .hero-left{
+        padding-top:calc(110px + env(safe-area-inset-top));
+    }
+
+    .hero-title{
+        font-size:clamp(3.45rem,18vw,5.8rem);
+    }
+
+    .hero-buttons .btn{
+        min-width:0;
+        padding-right:18px;
+        padding-left:18px;
+    }
+
+    .hero-stats{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        row-gap:28px;
+    }
+
+    .hero-stat:nth-child(3){
+        border-left:0;
+    }
+
+    .hero-visual{
+        min-height:clamp(430px,135vw,540px);
+    }
+
+    .story-title,
+    .menu-title,
+    .reservation h2{
+        font-size:clamp(3.1rem,16vw,5rem);
+    }
+
+    .experience-copy h2{
+        font-size:clamp(3rem,15vw,4.8rem);
+    }
+
+    .story-card-number{
+        font-size:clamp(6.5rem,34vw,10rem);
+    }
+
+    .filters{
+        gap:7px;
+    }
+
+    .filter{
+        min-height:44px;
+        padding:10px 13px;
+    }
+
+    .menu-item{
+        min-height:0;
+        grid-template-columns:minmax(0,1fr) auto;
+        gap:14px;
+    }
+
+    .menu-item-name{
+        font-size:clamp(1.55rem,8vw,2rem);
+    }
+
+    .price{
+        font-size:1.4rem;
+    }
+
+    .oven-art{
+        min-height:clamp(430px,135vw,560px);
+    }
+
+    .quote-section{
+        padding:90px 0;
+    }
+
+    .quote{
+        font-size:clamp(2.15rem,11vw,3.4rem);
+    }
+
+    .booking-form{
+        padding-right:20px;
+        padding-left:20px;
+    }
+
+    .contact-row span:last-child{
+        overflow-wrap:anywhere;
+    }
+
+    .footer-links a{
+        width:fit-content;
+        max-width:100%;
+    }
+}
+
+@media (max-width:360px){
+    .container{
+        width:calc(100% - 24px);
+    }
+
+    .nav-inner{
+        width:calc(100% - 20px);
+    }
+
+    .logo{
+        font-size:1.2rem;
+        letter-spacing:.12em;
+    }
+
+    .hero-left{
+        padding-right:14px;
+        padding-left:14px;
+    }
+
+    .hero-title{
+        font-size:clamp(3.15rem,17vw,4rem);
+    }
+
+    .hero-kicker{
+        gap:10px;
+        letter-spacing:.15em;
+    }
+
+    .hero-kicker::before{
+        width:24px;
+    }
+
+    .story-card,
+    .booking-form{
+        padding-right:18px;
+        padding-left:18px;
+    }
+
+    .principle{
+        grid-template-columns:40px minmax(0,1fr);
+        gap:14px;
+    }
+
+    .menu-item{
+        grid-template-columns:1fr;
+    }
+
+    .price{
+        justify-self:start;
+    }
+}
+
+
+/* Lebegő kapcsolatfelvétel */
+.chat-widget{position:fixed;right:30px;bottom:28px;z-index:110;font-family:var(--sans)}
+.chat-launcher{position:relative;isolation:isolate;display:flex;align-items:center;gap:12px;
+    min-height:62px;padding:7px 22px 7px 8px;border:1px solid rgba(255,255,255,.3);
+    border-radius:100px;color:#fff;background:linear-gradient(125deg,#8e343b,var(--wine-dark));
+    box-shadow:0 15px 38px rgba(84,25,30,.3),inset 0 1px 0 rgba(255,255,255,.25);
+    transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease;}
+.chat-launcher::before{content:"";position:absolute;inset:-6px;z-index:-1;border:1px solid rgba(116,38,44,.48);
+    border-radius:100px;animation:chat-pulse 3s ease-out infinite;pointer-events:none}
+.chat-launcher:hover{transform:translateY(-5px) scale(1.025);box-shadow:0 22px 45px rgba(84,25,30,.38),inset 0 1px 0 rgba(255,255,255,.3)}
+.chat-icon{position:relative;display:grid;place-items:center;flex:none;width:46px;height:46px;
+    border-radius:50%;background:rgba(255,255,255,.14)}
+.chat-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;
+    stroke-linecap:round;stroke-linejoin:round;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.chat-launcher:hover .chat-icon svg{transform:rotate(-13deg) scale(1.15)}
+.chat-icon::after{content:"";position:absolute;right:1px;top:1px;width:8px;height:8px;
+    border:2px solid var(--wine);border-radius:50%;background:#d7c6a0}
+.chat-launcher-text{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left}
+.chat-launcher-text strong{font-family:var(--serif);font-size:1.32rem;font-weight:400;letter-spacing:.025em;line-height:1.12;text-shadow:0 1px 2px rgba(0,0,0,.22)}
+.chat-launcher-text small{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:1}
+@keyframes chat-pulse{0%{opacity:.7;transform:scale(1)}65%,100%{opacity:0;transform:scale(1.16)}}
+.chat-panel{position:absolute;right:0;bottom:78px;width:min(380px,calc(100vw - 32px));
+    max-height:calc(100dvh - 118px);overflow:auto;border:1px solid rgba(116,38,44,.17);
+    border-radius:19px;background:var(--paper);box-shadow:0 28px 70px rgba(33,29,25,.23);
+    transform-origin:90% 100%;animation:chat-enter .6s cubic-bezier(.16,1,.3,1) both;will-change:transform,opacity,filter}
+.chat-panel[hidden]{display:none}
+@keyframes chat-enter{
+    0%{opacity:0;filter:blur(8px);transform:translate(22px,30px) scale(.78) rotate(3deg)}
+    65%{opacity:1;filter:blur(0);transform:translate(-3px,-7px) scale(1.025) rotate(-.5deg)}
+    100%{opacity:1;filter:blur(0);transform:translate(0) scale(1) rotate(0)}
+}
+.chat-panel.is-closing{pointer-events:none;animation:chat-leave .38s cubic-bezier(.55,0,.9,.4) both}
+@keyframes chat-leave{
+    from{opacity:1;filter:blur(0);transform:translate(0) scale(1) rotate(0)}
+    to{opacity:0;filter:blur(7px);transform:translate(23px,29px) scale(.78) rotate(3deg)}
+}
+.chat-launcher[aria-expanded="true"] .chat-icon svg{transform:rotate(-12deg) scale(1.1)}
+.chat-header{position:relative;display:flex;justify-content:space-between;align-items:flex-start;
+    overflow:hidden;padding:26px 24px 30px;color:var(--paper);
+    background:radial-gradient(circle at 90% -20%,rgba(232,189,148,.22),transparent 45%),
+    linear-gradient(135deg,#7e2c33,#45191e)}
+.chat-header::after{content:"R";position:absolute;right:36px;bottom:-54px;pointer-events:none;
+    font-family:var(--serif);font-size:11rem;line-height:1;color:rgba(255,255,255,.055)}
+.chat-kicker{display:block;margin-bottom:11px;color:#dfc7a9;font-size:.66rem;font-weight:600;
+    letter-spacing:.21em;text-transform:uppercase}
+.chat-header h2{position:relative;z-index:1;font-family:var(--serif);font-size:2.12rem;font-weight:400;line-height:1.2;letter-spacing:.015em;text-shadow:0 1px 2px rgba(0,0,0,.18)}
+.chat-close{position:relative;z-index:2;display:grid;place-items:center;width:30px;height:30px;
+    border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(255,255,255,.1);
+    color:inherit;font-size:1.35rem;line-height:1;transition:transform .25s ease,background .25s ease}
+.chat-close:hover{transform:rotate(90deg);background:rgba(255,255,255,.2)}
+.chat-content{padding:24px}
+.chat-greeting{position:relative;margin-bottom:24px;padding:16px 18px;border:1px solid rgba(116,38,44,.1);
+    border-radius:15px 15px 15px 4px;background:#f4ece3;box-shadow:0 5px 16px rgba(33,29,25,.04);
+    animation:chat-bubble .55s .13s both}
+@keyframes chat-bubble{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.chat-greeting p{margin:0;color:var(--ink);font-size:.84rem;line-height:1.65}
+.chat-content label{display:block;margin-bottom:9px;color:var(--wine);font-size:.62rem;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase}
+.chat-content textarea{display:block;width:100%;min-height:112px;resize:vertical;padding:13px 14px;
+    border:1px solid rgba(33,29,25,.18);border-radius:9px;background:#fff;color:var(--ink);
+    font-size:.85rem;line-height:1.55;outline:none;transition:border-color .25s,box-shadow .25s}
+.chat-content textarea:focus{border-color:var(--wine);box-shadow:0 0 0 3px rgba(116,38,44,.1)}
+.chat-send{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:12px;
+    width:100%;margin-top:14px;padding:15px 18px;border:0;border-radius:8px;background:var(--wine);
+    color:#fff;font-size:.67rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;
+    transition:transform .25s,background .25s}
+.chat-send::before{content:"";position:absolute;top:0;left:-120%;height:100%;width:70%;transform:skewX(-25deg);
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:left .55s}
+.chat-send:hover{transform:translateY(-2px);background:var(--wine-dark)}
+.chat-send:hover::before{left:150%}
+.chat-send svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;
+    stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
+.chat-send:hover svg{transform:translate(3px,-3px)}
+.chat-note{display:block;margin-top:13px;color:var(--muted);font-size:.69rem;line-height:1.5}
+@media(max-width:600px){.chat-widget{right:16px;bottom:16px}.chat-panel{bottom:76px}}
+@media(prefers-reduced-motion:reduce){.chat-launcher::before,.chat-panel,.chat-greeting{animation:none}.chat-launcher,.chat-icon svg,.chat-close{transition:none}}
+
 </style>
 </head>
 
@@ -2640,6 +2997,9 @@ footer{
                 class="menu-btn"
                 id="menuBtn"
                 aria-label="Menü"
+                aria-controls="mobileMenu"
+                aria-expanded="false"
+                type="button"
             >
                 <span></span>
                 <span></span>
@@ -2950,7 +3310,7 @@ footer{
         </div>
 
 
-        <div class="marquee-item">
+        <div class="marquee-item" aria-hidden="true">
 
             48 órás fermentáció
 
@@ -2978,6 +3338,30 @@ footer{
     </div>
 
 </section>
+
+<script>
+/* Keep each half of the loop wide enough to cover the entire viewport. */
+(() => {
+    const marquee = document.querySelector('.marquee');
+    const groups = marquee.querySelectorAll('.marquee-item');
+    const original = groups[0].innerHTML;
+
+    function fillMarquee() {
+        const track = marquee.querySelector('.marquee-track');
+        track.style.animation = 'none';
+        groups[0].innerHTML = original;
+        while (groups[0].getBoundingClientRect().width < marquee.clientWidth) {
+            groups[0].insertAdjacentHTML('beforeend', original);
+        }
+        groups[1].innerHTML = groups[0].innerHTML;
+        track.offsetWidth;
+        track.style.animation = '';
+    }
+
+    fillMarquee();
+    window.addEventListener('resize', fillMarquee);
+})();
+</script>
 
 
 
@@ -4211,6 +4595,11 @@ menuBtn.addEventListener(
             open
         );
 
+        menuBtn.setAttribute(
+            "aria-expanded",
+            String(open)
+        );
+
     }
 );
 
@@ -4232,6 +4621,11 @@ mobileLinks.forEach(
 
                 document.body.classList.remove(
                     "menu-open"
+                );
+
+                menuBtn.setAttribute(
+                    "aria-expanded",
+                    "false"
                 );
 
             }
@@ -4655,6 +5049,75 @@ if(
 
 }
 
+</script>
+
+
+<!-- Lebegő üzenetpanel -->
+<div class="chat-widget">
+    <button class="chat-launcher" id="chatLauncher" type="button" aria-controls="chatPanel" aria-expanded="false">
+        <span class="chat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 11.5a8 8 0 0 1-8 8 8.5 8.5 0 0 1-3.6-.8L4 20l1.3-4.4a8.5 8.5 0 0 1-.8-3.6 8 8 0 0 1 8-8 8 8 0 0 1 7.5 7.5Z"/><path d="M8.5 11.5h7"/></svg></span>
+        <span class="chat-launcher-text"><strong>Beszélgessünk!</strong><small>Írj nekünk üzenetet</small></span>
+    </button>
+    <section class="chat-panel" id="chatPanel" aria-labelledby="chatTitle" hidden>
+        <div class="chat-header">
+            <div><span class="chat-kicker">FORNERIVA · Kapcsolat</span><h2 id="chatTitle">Ciao, miben segíthetünk?</h2></div>
+            <button class="chat-close" id="chatClose" type="button" aria-label="Panel bezárása">&times;</button>
+        </div>
+        <form class="chat-content" id="chatForm">
+            <div class="chat-greeting"><p>Foglalás, étlap vagy egy jó pizza? Írd meg, miben segíthetünk! 🍕</p></div>
+            <label for="chatMessage">Üzeneted</label>
+            <textarea id="chatMessage" required placeholder="Szia! Szeretnék érdeklődni..."></textarea>
+            <button class="chat-send" type="submit">Üzenet küldése <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M8 5h11v11"/></svg></button>
+            <small class="chat-note">A küldés megnyitja az e-mail-alkalmazásodat a kész üzenettel.</small>
+        </form>
+    </section>
+</div>
+<script>
+(() => {
+    const launcher = document.getElementById('chatLauncher');
+    const panel = document.getElementById('chatPanel');
+    const close = document.getElementById('chatClose');
+    const message = document.getElementById('chatMessage');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function openPanel() {
+        panel.classList.remove('is-closing');
+        panel.hidden = false;
+        // Replays the opening animation if the panel is reopened while closing.
+        panel.style.animation = 'none';
+        panel.offsetWidth;
+        panel.style.animation = '';
+        launcher.setAttribute('aria-expanded', 'true');
+        message.focus();
+    }
+    function closePanel() {
+        launcher.setAttribute('aria-expanded', 'false');
+        launcher.focus();
+        if (reducedMotion.matches) {
+            panel.hidden = true;
+        } else {
+            panel.classList.add('is-closing');
+        }
+    }
+    launcher.addEventListener('click', () => {
+        if (launcher.getAttribute('aria-expanded') === 'true') closePanel();
+        else openPanel();
+    });
+    close.addEventListener('click', closePanel);
+    panel.addEventListener('animationend', event => {
+        if (event.target === panel && event.animationName === 'chat-leave' && panel.classList.contains('is-closing')) {
+            panel.hidden = true;
+            panel.classList.remove('is-closing');
+        }
+    });
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && launcher.getAttribute('aria-expanded') === 'true') closePanel();
+    });
+    document.getElementById('chatForm').addEventListener('submit', event => {
+        event.preventDefault();
+        if (!message.value.trim()) return;
+        location.href = 'mailto:ciao@forneriva.hu?subject=' + encodeURIComponent('Üzenet a FORNERIVA weboldaláról') + '&body=' + encodeURIComponent(message.value.trim());
+    });
+})();
 </script>
 
 </body>
