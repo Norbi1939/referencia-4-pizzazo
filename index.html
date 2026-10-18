@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Italiana&family=Italianno&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&family=DM+Sans:wght@400;500;600&family=Italiana&family=Italianno&display=swap" rel="stylesheet">
 
 <style>
 
@@ -32,7 +32,7 @@
 
     --line:rgba(33,29,25,.15);
 
-    --serif:"Italiana",Georgia,serif;
+    --serif:"Lora",Georgia,serif;
     --sans:"DM Sans",Arial,sans-serif;
     --script:"Italianno",cursive;
 }
@@ -3126,6 +3126,8 @@ footer .footer-links .footer-privacy-button:hover,footer .footer-links .footer-p
 footer .footer-links .footer-privacy-button:hover::after,footer .footer-links .footer-privacy-button:focus-visible::after{width:100%}
 footer .footer-links .footer-privacy-button:focus-visible{outline:2px solid var(--wine);outline-offset:3px}
 
+/* Egységes magyar ékezetek a főcímben. */
+.hero-title{font-family:"Cormorant Garamond",Georgia,serif;font-weight:300;}
 </style>
 <style>
 /* FORNERIVA — photographic gallery */
@@ -3160,7 +3162,10 @@ footer .footer-links .footer-privacy-button:focus-visible{outline:2px solid var(
 @media(max-width:760px){.fn-gallery{padding:70px 0}.fn-gallery-head{display:block;margin-bottom:30px}.fn-gallery-intro{margin-top:22px;max-width:360px}.fn-gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:360px 230px 230px;gap:12px}.fn-photo:first-child{grid-column:span 2;grid-row:auto}.fn-photo:nth-child(2){grid-column:span 2}.fn-photo-caption{left:16px;right:16px;bottom:18px}.fn-photo-caption strong{font-size:24px}.fn-gallery-foot{align-items:start;flex-direction:column;gap:8px}.fn-lightbox{padding:70px 48px}.fn-lightbox-prev{left:4px}.fn-lightbox-next{right:4px}}
 @media(prefers-reduced-motion:reduce){.fn-photo-visual img{transition:none}}
 </style>
-<style>.fn-photo-visual img,.fn-photo[data-photo] img{inset:0;width:100%;height:100%;object-fit:cover;max-width:100%}.fn-lightbox .fn-photo-visual:after{display:none}</style></head>
+<style>.fn-photo-visual img,.fn-photo[data-photo] img{inset:0;width:100%;height:100%;object-fit:cover;max-width:100%}.fn-lightbox .fn-photo-visual:after{display:none}</style>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>.experience .furnace-title{font-family:"Lora",Georgia,serif}</style>
+</head>
 
 
 <body>
@@ -3176,7 +3181,7 @@ footer .footer-links .footer-privacy-button:focus-visible{outline:2px solid var(
 
         <nav class="nav-links">
 
-            <a href="#story" class="nav-link">
+            <a href="kapcsolat.html" class="nav-link">
                 Rólunk
             </a>
 
@@ -3214,7 +3219,7 @@ footer .footer-links .footer-privacy-button:focus-visible{outline:2px solid var(
                 Kapcsolat
             </a>
 
-            <a href="foglalas.html" target="_blank" rel="noopener" class="nav-book">
+            <a href="#chatPanel" data-booking-chat aria-controls="chatPanel" aria-haspopup="true" class="nav-book">
                 Asztalfoglalás
             </a>
 
@@ -3241,7 +3246,7 @@ footer .footer-links .footer-privacy-button:focus-visible{outline:2px solid var(
 
 <div class="mobile-menu" id="mobileMenu">
 
-    <a href="#story" class="mobile-link">
+    <a href="kapcsolat.html" class="mobile-link">
         Rólunk
     </a>
 
@@ -3253,7 +3258,7 @@ footer .footer-links .footer-privacy-button:focus-visible{outline:2px solid var(
         A tűz
     </a>
 
-    <a href="foglalas.html" target="_blank" rel="noopener" class="mobile-link">
+    <a href="#chatPanel" data-booking-chat aria-controls="chatPanel" aria-haspopup="true" class="mobile-link">
         Foglalás
     </a>
 
@@ -3323,7 +3328,7 @@ footer .footer-links .footer-privacy-button:focus-visible{outline:2px solid var(
 
 
                 <a
-                    href="foglalas.html" target="_blank" rel="noopener"
+                    href="#chatPanel" data-booking-chat aria-controls="chatPanel" aria-haspopup="true"
                     class="btn btn-outline"
                 >
 
@@ -4219,7 +4224,7 @@ footer .footer-links .footer-privacy-button:focus-visible{outline:2px solid var(
 
 
 
-        <div class="menu-outro reveal"><div><span class="menu-outro-kicker">A jó választás az asztalnál kezdődik</span><p>Megvan, mivel kezdődik az estéd?</p></div><a href="foglalas.html" target="_blank" rel="noopener">Foglalj asztalt <span aria-hidden="true">↗</span></a></div>
+        <div class="menu-outro reveal"><div><span class="menu-outro-kicker">A jó választás az asztalnál kezdődik</span><p>Megvan, mivel kezdődik az estéd?</p></div><a href="#chatPanel" data-booking-chat aria-controls="chatPanel" aria-haspopup="true">Foglalj asztalt <span aria-hidden="true">↗</span></a></div>
 
         <p class="menu-note">
 
@@ -4267,7 +4272,7 @@ footer .footer-links .footer-privacy-button:focus-visible{outline:2px solid var(
             </div>
 
 
-            <h2 class="display">
+            <h2 class="display furnace-title">
 
                 Minden a
 
@@ -4359,14 +4364,14 @@ footer .footer-links .footer-privacy-button:focus-visible{outline:2px solid var(
 
 
 
-<!-- Foglalás: önálló oldalon érhető el. -->
+<!-- Foglalás: először a chatben választható ki a foglalás módja. -->
 <section class="reservation reservation-invite" id="reservation">
   <div class="container invite-layout">
     <div class="invite-copy reveal">
       <div class="eyebrow">Az este itt kezdődik</div>
       <h2 class="display">Az asztal vár.<br><em>A többit bízd ránk.</em></h2>
       <p>Frissen sült pizza, egy pohár bor és idő, amit jó együtt tölteni. Nézz körül, aztán találkozzunk az asztalnál.</p>
-      <a class="btn btn-primary invite-link" href="foglalas.html" target="_blank" rel="noopener">Foglalás megnyitása <span class="arrow">→</span></a>
+      <a class="btn btn-primary invite-link" href="#chatPanel" data-booking-chat aria-controls="chatPanel" aria-haspopup="true">Foglalás megnyitása <span class="arrow">→</span></a>
     </div>
     <div class="invite-art reveal" aria-hidden="true">
       <span class="invite-ring invite-ring-one"></span>
@@ -4435,7 +4440,7 @@ footer .footer-links .footer-privacy-button:focus-visible{outline:2px solid var(
                         A tűz
                     </a>
 
-                    <a href="foglalas.html" target="_blank" rel="noopener">
+                    <a href="#chatPanel" data-booking-chat aria-controls="chatPanel" aria-haspopup="true">
                         Foglalás
                     </a>
 
@@ -4455,7 +4460,7 @@ footer .footer-links .footer-privacy-button:focus-visible{outline:2px solid var(
                 </div>
 
                 <div class="footer-links">
-                    <a href="#story">Rólunk</a>
+                    <a href="kapcsolat.html">Rólunk</a>
 
                     <a class="footer-privacy-button" href="adatvedelem.html">Adatvédelem</a>
                 </div>
@@ -4937,6 +4942,29 @@ if(
         if (launcher.getAttribute('aria-expanded') === 'true') closePanel();
         else openPanel();
     });
+    document.querySelectorAll('[data-booking-chat]').forEach(button => {
+        button.addEventListener('click', event => {
+            event.preventDefault();
+            if (launcher.getAttribute('aria-expanded') === 'true') {
+                closePanel();
+                return;
+            }
+            transitionVersion++;
+            returning = false;
+            panel.getAnimations({subtree:true}).forEach(animation => animation.cancel());
+            panel.style.height = '';
+            panel.style.overflow = '';
+            guided.hidden = true;
+            choices.hidden = false;
+            greeting.hidden = false;
+            back.disabled = false;
+            title.textContent = 'Ciao, miben segíthetünk?';
+            aiButton.setAttribute('aria-expanded', 'false');
+            openPanel();
+            panel.scrollTop = 0;
+            choices.querySelector('a').focus({preventScroll:true});
+        });
+    });
     close.addEventListener('click', closePanel);
     panel.addEventListener('animationend', event => {
         if (event.target === panel && event.animationName === 'chat-leave' && panel.classList.contains('is-closing')) {
@@ -4949,20 +4977,23 @@ if(
     });
     document.getElementById('chatOnlineBooking').addEventListener('click', closePanel);
     let returning = false;
+    let transitionVersion = 0;
     async function showChoices() {
         if (returning) return;
         returning = true;
+        const version = ++transitionVersion;
         back.disabled = true;
         const duration = 820;
         const easing = 'cubic-bezier(.22,1,.36,1)';
         const oldHeight = panel.offsetHeight;
         try {
             if (!reducedMotion.matches) {
-                await guided.animate([
+                await Promise.allSettled([guided.animate([
                     {opacity:1,transform:'translateY(0) scale(1)'},
                     {opacity:0,transform:'translateY(-10px) scale(.985)'}
-                ],{duration:320,easing:'ease-in',fill:'forwards'}).finished;
+                ],{duration:320,easing:'ease-in',fill:'forwards'}).finished]);
             }
+            if (version !== transitionVersion) return;
             guided.hidden = true;
             choices.hidden = false;
             greeting.hidden = false;
@@ -4988,6 +5019,7 @@ if(
                 reveal.forEach(animation=>animation.cancel());
             }
         } finally {
+            if (version !== transitionVersion) return;
             panel.style.height = '';
             panel.style.overflow = '';
             back.disabled = false;
@@ -4998,6 +5030,7 @@ if(
     aiButton.addEventListener('click', async () => {
         if (returning) return;
         returning = true;
+        const version = ++transitionVersion;
         const oldHeight = panel.offsetHeight;
         const duration = 820;
         const easing = 'cubic-bezier(.22,1,.36,1)';
@@ -5009,6 +5042,7 @@ if(
                 ],{duration:320,delay:index * 35,easing:'ease-in',fill:'forwards'}));
                 await Promise.allSettled(leaving.map(animation=>animation.finished));
                 leaving.forEach(animation=>animation.cancel());
+                if (version !== transitionVersion) return;
             }
             choices.hidden = true;
             greeting.hidden = true;
@@ -5035,6 +5069,7 @@ if(
                 reveal.cancel();
             }
         } finally {
+            if (version !== transitionVersion) return;
             panel.style.height = '';
             panel.style.overflow = '';
             returning = false;
