@@ -870,6 +870,22 @@
 
 
 
+
+    /* Compact chapter navigation: fixed frame, independently scrollable links. */
+    .compact-nav-frame{position:fixed;z-index:60;inset:0 0 auto;opacity:0;visibility:hidden;transform:translateY(-100%);pointer-events:none;transition:transform .58s cubic-bezier(.22,1,.36,1),opacity .42s ease,visibility 0s linear .58s}
+    .compact-nav-frame.is-visible{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto;transition:transform .58s cubic-bezier(.22,1,.36,1),opacity .42s ease,visibility 0s}
+    .compact-nav-frame .compact-nav{position:relative;inset:auto;z-index:auto;justify-content:flex-start;padding-inline:max(18px,calc((100% - 1080px)/2));opacity:1;visibility:visible;transform:none;pointer-events:inherit;transition:none;scroll-padding-inline:18px;overscroll-behavior-x:contain}
+    .compact-nav-frame .compact-nav a{position:relative;display:flex;align-items:center;justify-content:center;min-height:44px;padding:10px 13px;color:var(--muted);background:transparent;white-space:nowrap}
+    .compact-nav-frame .compact-nav a::after{content:"";position:absolute;inset:auto 13px 3px;height:1px;background:var(--wine);transform:scaleX(0);transition:transform .42s ease}
+    .compact-nav-frame .compact-nav a[aria-current="location"]{color:var(--cream);background:var(--wine)}
+    .compact-nav-frame .compact-nav a[aria-current="location"]::after{transform:scaleX(1)}
+    .compact-nav-frame .compact-nav a:focus-visible{outline-offset:-3px}
+    .compact-nav-frame::before,.compact-nav-frame::after{content:"";position:absolute;z-index:2;top:0;bottom:1px;width:22px;pointer-events:none;opacity:0;transition:opacity .2s ease}
+    .compact-nav-frame::before{left:0;background:linear-gradient(90deg,var(--paper),rgba(250,247,241,0))}
+    .compact-nav-frame::after{right:0;background:linear-gradient(270deg,var(--paper),rgba(250,247,241,0))}
+    .compact-nav-frame.has-before::before,.compact-nav-frame.has-after::after{opacity:1}
+    @media(max-width:900px){.compact-nav-frame .compact-nav{padding-inline:18px}.compact-nav-frame .compact-nav a{padding:9px 11px}.compact-nav-frame .compact-nav a::after{left:11px;right:11px}}
+    @media(prefers-reduced-motion:reduce){.compact-nav-frame,.compact-nav-frame.is-visible,.compact-nav-frame::before,.compact-nav-frame::after,.compact-nav-frame .compact-nav a::after{transition:none}}
   </style>
 
 
@@ -934,7 +950,7 @@
 
 
 
-      <nav class="compact-nav" id="compactNav" aria-label="Gyors fejezetnavigáció" aria-hidden="true" inert>
+      <div class="compact-nav-frame" id="compactNavFrame"><nav class="compact-nav" id="compactNav" aria-label="Gyors fejezetnavigáció" aria-hidden="true" inert>
 
 
 
@@ -950,7 +966,7 @@
 
 
 
-      </nav>
+      </nav></div>
 
 
 
@@ -1327,613 +1343,165 @@
 
 
     const nav=document.querySelector('.contents');
-
-
-
-
-
-
-
     const compactNav=document.getElementById('compactNav');
-
-
-
-
-
-
-
+    const compactFrame=document.getElementById('compactNavFrame');
     const navLinks=[...nav.querySelectorAll('a[href^="#"]')];
-
-
-
-
-
-
-
     const compactLinks=[...compactNav.querySelectorAll('a[href^="#"]')];
-
-
-
-
-
-
-
-    const sections=navLinks.map(link=>document.querySelector(link.getAttribute('href')));
-
-
-
-
-
-
-
+    const sections=navLinks.map(link=>document.getElementById(link.hash.slice(1)));
     const progress=document.getElementById('navProgress');
-
-
-
-
-
-
-
-    let navEnd=nav.getBoundingClientRect().bottom+window.scrollY;
-
-
-
-
-
-
-
     let navTicking=false;
-
-
-
-
-
-
-
+    let layoutPending=true;
+    let activeIndex=-1;
     let guidedIndex=null;
-
-
-
-
-
-
-
-    function updateNav(){
-
-
-
-
-
-
-
-      const showCompact=window.scrollY>navEnd-56;
-
-
-
-
-
-
-
-      compactNav.classList.toggle('is-visible',showCompact);
-
-
-
-
-
-
-
-      compactNav.setAttribute('aria-hidden',String(!showCompact));
-
-
-
-
-
-
-
-      compactNav.inert=!showCompact;
-
-
-
-
-
-
-
-      const boundary=showCompact?85:window.innerHeight*.34;
-
-
-
-
-
-
-
-      let activeIndex=0;
-
-
-
-
-
-
-
-      sections.forEach((section,index)=>{if(section&&section.getBoundingClientRect().top<=boundary)activeIndex=index});
-
-
-
-
-
-
-
-      if(window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-12)activeIndex=sections.length-1;
-
-
-
-
-
-
-
-      if(guidedIndex!==null)activeIndex=guidedIndex;
-
-
-
-
-
-
-
-      navLinks.forEach((link,index)=>{
-
-
-
-
-
-
-
-        const active=index===activeIndex;
-
-
-
-
-
-
-
-        link.classList.toggle('is-active',active);
-
-
-
-
-
-
-
-        if(active)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');
-
-
-
-
-
-
-
-        if(active)compactLinks[index].setAttribute('aria-current','location');else compactLinks[index].removeAttribute('aria-current');
-
-
-
-
-
-
-
-      });
-
-
-
-
-
-
-
-      progress.style.width=((activeIndex+1)/navLinks.length*100)+'%';
-
-
-
-
-
-
-
-      navTicking=false;
-
-
-
-
-
-
-
-    }
-
-
-
-
-
-
-
-    function queueNav(){if(navTicking)return;navTicking=true;requestAnimationFrame(updateNav)}
-
-
-
-
-
-
-
-    window.addEventListener('scroll',queueNav,{passive:true});
-
-
-
-
-
-
-
-    window.addEventListener('resize',()=>{navEnd=nav.getBoundingClientRect().bottom+window.scrollY;queueNav()});
-
-
-
-
-
-
-
     let scrollAnimation=0;
-
-
-
-
-
-
-
     let previousScrollBehavior='';
+    let manualPointer=null;
+    let compactShown=false;
 
-
-
-
-
-
+    function updateEdges(){
+      const max=Math.max(0,compactNav.scrollWidth-compactNav.clientWidth);
+      compactFrame.classList.toggle('has-before',compactNav.scrollLeft>1);
+      compactFrame.classList.toggle('has-after',compactNav.scrollLeft<max-1);
+    }
+    function revealLink(link,instant=false){
+      if(manualPointer!==null)return;
+      const bar=compactNav.getBoundingClientRect();
+      const item=link.getBoundingClientRect();
+      const padding=18;
+      if(!instant&&item.left>=bar.left+padding&&item.right<=bar.right-padding)return;
+      const max=Math.max(0,compactNav.scrollWidth-compactNav.clientWidth);
+      const left=Math.max(0,Math.min(max,compactNav.scrollLeft+
+        item.left-bar.left+(item.width-bar.width)/2));
+      // Never use scrollIntoView here: it can also scroll the document vertically.
+      compactNav.scrollTo({left,top:0,behavior:instant||reducedMotion.matches?'instant':'smooth'});
+      updateEdges();
+    }
+    function sectionOffset(){return compactNav.offsetHeight+24;}
+    function updateNav(){
+      navTicking=false;
+      const layout=layoutPending;
+      layoutPending=false;
+      const showCompact=nav.getBoundingClientRect().bottom<56;
+      const becameVisible=showCompact&&!compactShown;
+      compactShown=showCompact;
+      compactFrame.classList.toggle('is-visible',showCompact);
+      compactNav.setAttribute('aria-hidden',String(!showCompact));
+      compactNav.inert=!showCompact;
+      const boundary=sectionOffset();
+      const tops=sections.map(section=>section.getBoundingClientRect().top);
+      let next=0;
+      tops.forEach((top,index)=>{if(top<=boundary)next=index});
+      // A small spatial dead band prevents alternating labels around one heading.
+      // It does not delay scrolling or restart any animation.
+      if(activeIndex>=0&&!layout){
+        if(next>activeIndex&&tops[next]>boundary-6)next=activeIndex;
+        else if(next<activeIndex&&tops[activeIndex]<=boundary+6)next=activeIndex;
+      }
+      const maxScroll=Math.max(0,document.documentElement.scrollHeight-window.innerHeight);
+      if(maxScroll>0&&window.scrollY>=maxScroll-2)next=sections.length-1;
+      if(guidedIndex!==null)next=guidedIndex;
+      const changed=next!==activeIndex;
+      if(changed){
+        activeIndex=next;
+        navLinks.forEach((link,index)=>{
+          const active=index===activeIndex;
+          link.classList.toggle('is-active',active);
+          for(const item of [link,compactLinks[index]]){
+            if(active)item.setAttribute('aria-current','location');
+            else item.removeAttribute('aria-current');
+          }
+        });
+        progress.style.width=((activeIndex+1)/navLinks.length*100)+'%';
+      }
+      if(changed||layout||becameVisible)revealLink(compactLinks[activeIndex],layout);
+      updateEdges();
+    }
+    function queueNav(){if(!navTicking){navTicking=true;requestAnimationFrame(updateNav)}}
+    function layoutChanged(){layoutPending=true;queueNav()}
+    window.addEventListener('scroll',queueNav,{passive:true});
+    window.addEventListener('resize',layoutChanged,{passive:true});
+    window.addEventListener('pageshow',layoutChanged);
+    document.addEventListener('load',layoutChanged,true);
+    if(document.fonts)document.fonts.ready.then(layoutChanged);
+    if('ResizeObserver' in window){
+      const navLayoutObserver=new ResizeObserver(layoutChanged);
+      navLayoutObserver.observe(nav);
+      navLayoutObserver.observe(compactNav);
+      navLayoutObserver.observe(document.querySelector('.article'));
+    }
+    compactNav.addEventListener('scroll',updateEdges,{passive:true});
+    compactNav.addEventListener('pointerdown',event=>{
+      manualPointer=event.pointerId;
+      compactNav.scrollTo({left:compactNav.scrollLeft,behavior:'instant'});
+    },{passive:true});
+    function endManual(event){if(event.pointerId===manualPointer)manualPointer=null}
+    window.addEventListener('pointerup',endManual,{passive:true});
+    window.addEventListener('pointercancel',endManual,{passive:true});
+    compactNav.addEventListener('focusin',event=>{
+      if(compactLinks.includes(event.target))revealLink(event.target);
+    });
 
     function stopChapterScroll(){
-
-
-
-
-
-
-
       if(!scrollAnimation)return;
-
-
-
-
-
-
-
       cancelAnimationFrame(scrollAnimation);
-
-
-
-
-
-
-
       scrollAnimation=0;
-
-
-
-
-
-
-
       guidedIndex=null;
-
-
-
-
-
-
-
       document.documentElement.style.scrollBehavior=previousScrollBehavior;
-
-
-
-
-
-
-
       queueNav();
-
-
-
-
-
-
-
     }
-
-
-
-
-
-
-
-    ["wheel","touchstart","keydown"].forEach(type=>window.addEventListener(type,stopChapterScroll,{passive:true}));
-
-
-
-
-
-
-
+    window.addEventListener('wheel',stopChapterScroll,{passive:true});
+    window.addEventListener('touchstart',stopChapterScroll,{passive:true});
+    window.addEventListener('pointerdown',stopChapterScroll,{passive:true});
+    window.addEventListener('keydown',event=>{
+      if(['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' ','Escape'].includes(event.key))stopChapterScroll();
+    });
+    function destination(target){
+      const max=Math.max(0,document.documentElement.scrollHeight-window.innerHeight);
+      return Math.max(0,Math.min(target.getBoundingClientRect().top+window.scrollY-sectionOffset(),max));
+    }
     [...navLinks,...compactLinks].forEach(link=>link.addEventListener('click',event=>{
-
-
-
-
-
-
-
+      if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
       const target=sections.find(section=>section.id===link.hash.slice(1));
-
-
-
-
-
-
-
       if(!target)return;
-
-
-
-
-
-
-
       event.preventDefault();
-
-
-
-
-
-
-
       stopChapterScroll();
-
-
-
-
-
-
-
       history.pushState(null,'',link.hash);
-
-
-
-
-
-
-
-      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){target.scrollIntoView({behavior:'auto',block:'start'});queueNav();return}
-
-
-
-
-
-
-
       const start=window.scrollY;
-
-
-
-
-
-
-
-      const maxScroll=document.documentElement.scrollHeight-window.innerHeight;
-
-
-
-
-
-
-
-      const offset=window.innerWidth<=780?78:84;
-
-
-
-
-
-
-
-      const targetTop=Math.max(0,Math.min(target.getBoundingClientRect().top+start-offset,maxScroll));
-
-
-
-
-
-
-
       const targetIndex=sections.indexOf(target);
-
-
-
-
-
-
-
-      const duration=720;
-
-
-
-
-
-
-
-      const began=performance.now();
-
-
-
-
-
-
-
-      previousScrollBehavior=document.documentElement.style.scrollBehavior;
-
-
-
-
-
-
-
-      document.documentElement.style.scrollBehavior='auto';
-
-
-
-
-
-
-
-      guidedIndex=targetIndex;
-
-
-
-
-
-
-
-      [...navLinks,...compactLinks].forEach(item=>item.classList.remove('is-target'));
-
-
-
-
-
-
-
-      [navLinks[targetIndex],compactLinks[targetIndex]].forEach(item=>{
-
-
-
-
-
-
-
-        item.classList.add('is-target');
-
-
-
-
-
-
-
-        item.addEventListener('animationend',()=>item.classList.remove('is-target'),{once:true});
-
-
-
-
-
-
-
-      });
-
-
-
-
-
-
-
-      queueNav();
-
-
-
-
-
-
-
-      function frame(now){
-
-
-
-
-
-
-
-        const elapsed=Math.min(duration,now-began);
-
-
-
-
-
-
-
-        const phase=elapsed/duration;
-
-
-
-
-
-
-
-        const eased=1-Math.pow(1-phase,3);
-
-
-
-
-
-
-
-        window.scrollTo(0,start+(targetTop-start)*eased);
-
-
-
-
-
-
-
-        if(elapsed<duration){scrollAnimation=requestAnimationFrame(frame)}
-
-
-
-
-
-
-
-        else{scrollAnimation=0;guidedIndex=null;document.documentElement.style.scrollBehavior=previousScrollBehavior;queueNav()}
-
-
-
-
-
-
-
+      if(reducedMotion.matches){
+        window.scrollTo({top:destination(target),behavior:'instant'});
+        guidedIndex=targetIndex;
+        updateNav();
+        guidedIndex=null;
+        return;
       }
-
-
-
-
-
-
-
+      const duration=720;
+      const began=performance.now();
+      previousScrollBehavior=document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior='auto';
+      guidedIndex=targetIndex;
+      [...navLinks,...compactLinks].forEach(item=>item.classList.remove('is-target'));
+      [navLinks[targetIndex],compactLinks[targetIndex]].forEach(item=>item.classList.add('is-target'));
+      queueNav();
+      function frame(now){
+        const phase=Math.min(1,(now-began)/duration);
+        const eased=1-Math.pow(1-phase,3);
+        // Re-read the destination so rotation/font changes do not leave a stale offset.
+        window.scrollTo({top:start+(destination(target)-start)*eased,behavior:'instant'});
+        if(phase<1)scrollAnimation=requestAnimationFrame(frame);
+        else{
+          scrollAnimation=0;
+          guidedIndex=null;
+          document.documentElement.style.scrollBehavior=previousScrollBehavior;
+          queueNav();
+        }
+      }
       scrollAnimation=requestAnimationFrame(frame);
-
-
-
-
-
-
-
     }));
-
-
-
-
-
-
-
+    [...navLinks,...compactLinks].forEach(link=>link.addEventListener('animationend',event=>{
+      if(event.animationName==='chapter-glow')link.classList.remove('is-target');
+    }));
     updateNav();
-
-
-
-
-
-
-
   </script>
 
 

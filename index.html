@@ -50,6 +50,7 @@
 
     html{
         scroll-behavior:smooth;
+        scrollbar-gutter:stable;
     }
 
     body{
@@ -2884,12 +2885,12 @@
         transform-origin:90% 100%;animation:chat-enter 1.15s cubic-bezier(.16,1,.3,1) both;will-change:transform,opacity,filter}
     .chat-panel[hidden]{display:none}
     @keyframes chat-enter{
-        0%{opacity:0;filter:blur(3px);transform:translateY(18px) scale(.9)}
+        0%{opacity:var(--chat-enter-opacity,0);filter:var(--chat-enter-filter,blur(3px));transform:var(--chat-enter-transform,translateY(18px) scale(.9))}
         100%{opacity:1;filter:blur(0);transform:translateY(0) scale(1)}
     }
     .chat-panel.is-closing{pointer-events:none;animation:chat-leave .38s cubic-bezier(.55,0,.9,.4) both}
     @keyframes chat-leave{
-        from{opacity:1;filter:blur(0);transform:translate(0) scale(1) rotate(0)}
+        from{opacity:var(--chat-leave-opacity,1);filter:var(--chat-leave-filter,blur(0));transform:var(--chat-leave-transform,translate(0) scale(1) rotate(0))}
         to{opacity:0;filter:blur(7px);transform:translate(23px,29px) scale(.78) rotate(3deg)}
     }
     .chat-launcher[aria-expanded="true"] .chat-icon svg{transform:rotate(-12deg) scale(1.1)}
@@ -3018,6 +3019,7 @@
     .fn-cookie-layer[hidden],.fn-cookie-settings[hidden]{display:none!important}
     .fn-cookie-layer{position:fixed;inset:0;z-index:3000;display:grid;place-items:center;padding:18px;background:rgba(20,23,18,.68);backdrop-filter:blur(8px);animation:fn-layer-in .45s ease both}
     .fn-cookie-layer.is-closing{animation:fn-layer-out .5s ease both;pointer-events:none}
+    .fn-cookie-layer.is-closing ~ .fn-cookie-settings{z-index:3001;}
     .fn-cookie-layer.is-closing .fn-cookie-card{animation:fn-cookie-out .5s cubic-bezier(.55,0,.9,.4) both}
     .fn-cookie-card{position:relative;width:min(530px,100%);max-height:calc(100dvh - 36px);overflow:auto;padding:clamp(25px,5vw,46px);border:1px solid rgba(193,161,116,.45);border-top:5px solid var(--wine);background:var(--paper);color:var(--ink);box-shadow:0 28px 75px rgba(0,0,0,.28);animation:fn-cookie-in .5s cubic-bezier(.22,1,.36,1) both}
     .fn-cookie-eyebrow{display:block;margin-bottom:19px;color:var(--wine);font:.7rem var(--sans);font-weight:700;letter-spacing:.2em;text-transform:uppercase}
@@ -3032,7 +3034,17 @@
     .fn-cookie-reject:hover{background:rgba(116,38,44,.08)}
     .fn-cookie-accept:hover{background:var(--wine-dark)}
     .fn-cookie-settings{position:fixed;left:max(14px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom));z-index:105;padding:9px 13px;border:1px solid rgba(33,29,25,.18);border-radius:3px;background:var(--cream);color:var(--wine);box-shadow:0 5px 22px rgba(33,29,25,.15);font:.65rem var(--sans);font-weight:700;letter-spacing:.09em;text-transform:uppercase;cursor:pointer}
-    .fn-cookie-settings:hover{background:var(--paper)}
+    .fn-cookie-settings{transition:background-color .3s ease,color .3s ease,border-color .3s ease;}
+    .fn-cookie-settings::after{content:"";position:absolute;left:13px;right:13px;bottom:6px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.22,1,.36,1);pointer-events:none;}
+    @media(hover:hover) and (pointer:fine){
+        .fn-cookie-settings:hover{background:var(--wine);border-color:var(--wine);color:var(--cream);}
+        .fn-cookie-settings:hover::after{transform:scaleX(1);}
+    }
+    .fn-cookie-settings:focus-visible{background:var(--wine);border-color:var(--wine);color:var(--cream);}
+    .fn-cookie-settings:focus-visible::after{transform:scaleX(1);}
+    @media(prefers-reduced-motion:reduce){.fn-cookie-settings,.fn-cookie-settings::after{transition:none!important;}}
+    @media(min-width:851px){footer{padding-bottom:calc(110px + env(safe-area-inset-bottom));}}
+
     .fn-cookie-layer :focus-visible,.fn-cookie-settings:focus-visible{outline:3px solid var(--wine);outline-offset:3px}
     @keyframes fn-cookie-in{from{opacity:0;transform:translateY(24px) scale(.94)}to{opacity:1;transform:none}}
     @keyframes fn-cookie-out{from{opacity:1;transform:none}to{opacity:0;transform:translateY(18px) scale(.94)}}
@@ -3129,6 +3141,139 @@
     <style>.fn-photo-visual img,.fn-photo[data-photo] img{inset:0;width:100%;height:100%;object-fit:cover;max-width:100%}.fn-lightbox .fn-photo-visual:after{display:none}</style>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
     <style>.experience .furnace-title{font-family:"Lora",Georgia,serif}</style>
+    <style>
+    /* Mobile hero: readable captions over the photograph, without the fallback scene. */
+    @media (max-width:850px){
+        .hero-visual{
+            display:block;
+            min-height:0;
+            height:clamp(360px,100vw,480px);
+            padding:0;
+        }
+        .pizza-scene{display:none;}
+        .hero-visual::after{
+            background:linear-gradient(
+                to bottom,
+                rgba(12,9,7,0) 48%,
+                rgba(12,9,7,.16) 64%,
+                rgba(12,9,7,.65) 82%,
+                rgba(12,9,7,.82) 100%
+            );
+        }
+        .hero-script{
+            position:absolute;
+            inset:auto max(24px,env(safe-area-inset-right)) 66px max(24px,env(safe-area-inset-left));
+            width:auto;
+            max-width:none;
+            font-size:clamp(2.5rem,10vw,3rem);
+            line-height:1.05;
+        }
+        .hero-script br{display:none;}
+        .hero-side{
+            position:absolute;
+            inset:auto max(24px,env(safe-area-inset-right)) 20px max(24px,env(safe-area-inset-left));
+            width:auto;
+            max-width:none;
+            display:flex;
+            flex-wrap:wrap;
+            align-items:center;
+            justify-content:center;
+            gap:5px;
+            line-height:1.6;
+        }
+        .hero-side-line{width:18px;height:1px;margin:0 3px 0 0;}
+        .hero-side span{margin:0;font-size:.65rem;}
+        .hero-stat span{font-size:.6rem;line-height:1.6;}
+        .story-trigger{min-height:44px;}
+        .story-play{flex-shrink:0;}
+        .menu-section .filter{min-height:44px;}
+        .chat-close{flex-shrink:0;width:44px;height:44px;}
+        footer{padding-bottom:calc(110px + env(safe-area-inset-bottom));}
+        .footer-links a,footer .footer-links .footer-privacy-button{min-height:44px;display:inline-flex;align-items:center;}
+        .fn-cookie-settings{min-height:44px;max-width:calc(100vw - 110px);}
+        .mobile-menu{scroll-padding-bottom:100px;padding-bottom:calc(110px + env(safe-area-inset-bottom));}
+    }
+    @media (max-width:600px){
+        /* A compact launcher leaves room for the cookie settings and page content. */
+        .chat-launcher{width:62px;padding:7px;justify-content:center;}
+        .chat-launcher-text{
+            position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+            overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+        }
+        .chat-panel{
+            width:min(380px,calc(100vw - 32px - env(safe-area-inset-right)));
+            max-height:calc(100vh - 110px - env(safe-area-inset-bottom));
+            max-height:calc(100dvh - 110px - env(safe-area-inset-bottom));
+        }
+        .chat-header,.chat-content{padding:20px;}
+        .chat-header > div{min-width:0;}
+        .chat-kicker{overflow-wrap:anywhere;}
+        .chat-guided input,.chat-guided select,.chat-guided textarea{min-width:0;}
+    }
+    @media (max-width:560px){
+        .menu-section .menu-item{grid-template-columns:minmax(0,1fr);gap:16px;}
+        .menu-section .price{justify-self:start;}
+        .menu-item-name,.spotlight-copy h3,.fn-photo-caption strong{overflow-wrap:anywhere;}
+        .spotlight-copy h3{font-size:clamp(2.6rem,11vw,3.4rem);}
+        .fn-photo-caption > span{min-width:0;}
+    }
+    @media (max-width:430px){
+        .fn-gallery-grid{grid-template-columns:minmax(0,1fr);grid-template-rows:330px repeat(3,230px);}
+        .fn-photo:first-child,.fn-photo:nth-child(2){grid-column:auto;}
+    }
+    </style>
+    <style id="matched-footer-style">
+    /* Footer rules copied from the current kapcsolat.html and scoped to this footer. */
+    #footer{background:var(--cream);color:var(--ink);font-family:var(--sans);}
+#footer > .container{width:min(1180px,calc(100% - 48px));margin:auto}
+#footer{padding:35px 0;border-top:1px solid var(--line)}
+#footer .footer-inner{display:flex;justify-content:space-between;gap:20px;align-items:center;font-size:10px;color:var(--muted)}
+#footer .footer-script{font-family:var(--script);font-size:29px;color:var(--wine)}
+#footer .matched-footer-links{display:flex;gap:25px}
+@media(max-width:800px){
+#footer .footer-inner{flex-wrap:wrap}
+#footer .footer-script{width:100%;order:-1}
+}
+@media(max-width:500px){
+#footer > .container{width:calc(100% - 36px)}
+#footer .matched-footer-links{gap:18px}
+}
+@media(max-width:600px){
+#footer{padding-bottom:calc(112px + env(safe-area-inset-bottom));}
+#footer .matched-footer-links{flex-basis:100%;justify-content:flex-start;gap:24px;}
+#footer .matched-footer-links a{display:inline-flex;align-items:center;min-height:44px;}
+}
+#footer .matched-footer-links{width:260px;max-width:100%;flex-wrap:wrap;gap:12px;}
+#footer .matched-footer-links a{display:inline-flex;flex:1 1 124px;align-items:center;justify-content:center;min-height:44px;padding:12px 18px;border:1px solid var(--wine);border-radius:4px;background:var(--wine);color:var(--cream);font-size:.8125rem;font-weight:600;line-height:1.3;white-space:nowrap;transition:background-color .25s ease,border-color .25s ease;}
+#footer .matched-footer-links a:focus-visible{outline:2px solid var(--wine);outline-offset:3px;}
+@media(hover:hover) and (pointer:fine){
+#footer .matched-footer-links a:hover{background:var(--wine-dark);border-color:var(--wine-dark);}
+}
+@media(min-width:601px){
+#footer{padding-bottom:calc(112px + env(safe-area-inset-bottom));}
+}
+#footer .footer-inner{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(44px,auto) auto;row-gap:16px;}
+#footer .footer-inner>span:first-child{grid-column:1;grid-row:1;justify-self:start;}
+#footer .footer-script{grid-column:1;grid-row:1;justify-self:center;text-align:center;max-width:100%;}
+#footer .matched-footer-links{grid-column:1;grid-row:2;justify-self:center;}
+@media(min-width:601px) and (max-width:800px){
+#footer .footer-inner{grid-template-rows:auto minmax(44px,auto);row-gap:20px;}
+#footer .footer-inner>span:first-child{grid-row:2;}
+}
+@media(max-width:600px){
+#footer .footer-inner{grid-template-rows:auto auto auto;row-gap:20px;}
+#footer .footer-inner>span:first-child{grid-row:2;}
+#footer .matched-footer-links{grid-row:3;}
+}
+    @media(prefers-reduced-motion:reduce){#footer .matched-footer-links a{transition:none!important;}}
+        /* Keep the existing button widths; distribute only the remaining wide-screen space. */
+    @media(min-width:1024px){
+        #footer .matched-footer-links{width:100%;flex-wrap:nowrap;justify-content:space-between;gap:24px;}
+        #footer .matched-footer-links a{flex:0 0 124px;}
+        #footer .matched-footer-links a:last-child{flex-basis:260px;}
+        #footer .matched-footer-links a:nth-child(3),#footer .matched-footer-links a:nth-child(4){order:1;}
+    }
+</style>
     </head>
 
 
@@ -4355,105 +4500,13 @@
         FOOTER
     ======================================================== -->
 
-    <footer id="footer">
-
-        <div class="container">
-
-
-            <div class="footer-top">
-
-
-                <div class="footer-brand">
-
-
-                    <div class="footer-logo">
-                        FORNERIVA
-                    </div>
-
-
-                    <p>
-
-                        Pizza, tűz és türelem.
-
-                        Egy visszafogott budapesti
-                        pizzéria, ahol az egyszerűség
-                        nem kompromisszum.
-
-                    </p>
-
-
-                </div>
-
-
-
-                <div>
-
-
-                    <div class="footer-heading">
-                        Navigáció
-                    </div>
-
-
-                    <div class="footer-links">
-
-                        <a href="#menu">
+    <footer id="footer"><div class="container footer-inner"><span>© <span id="year"></span> FORNERIVA</span><span class="footer-script">Pizza, fuoco e un po’ d’amore.</span><div class="matched-footer-links"><a href="#menu">
                             Étlap
-                        </a>
-
-                        <a href="#experience">
+                        </a><a href="#experience">
                             A tűz
-                        </a>
-
-                        <a href="#chatPanel" data-booking-chat aria-controls="chatPanel" aria-haspopup="true">
+                        </a><a href="#chatPanel" data-booking-chat aria-controls="chatPanel" aria-haspopup="true">
                             Foglalás
-                        </a>
-
-
-                    </div>
-
-
-                </div>
-
-
-
-                <div>
-
-
-                    <div class="footer-heading">
-                        Ismerj meg minket
-                    </div>
-
-                    <div class="footer-links">
-                        <a href="kapcsolat.html">Rólunk</a>
-
-                        <a class="footer-privacy-button" href="adatvedelem.html">Adatvédelem</a>
-                    </div>
-
-                </div>
-
-
-            </div>
-
-
-
-            <div class="footer-bottom">
-
-                <span>
-                    ©
-                    <span id="year"></span>
-                    FORNERIVA
-                </span>
-
-                <span>
-                    Pizza & Fuoco · Budapest
-                </span>
-
-            </div>
-
-
-        </div>
-
-    </footer>
+                        </a><a href="kapcsolat.html">Rólunk</a><a class="footer-privacy-button" href="adatvedelem.html">Adatvédelem</a></div></div></footer>
 
 
 
@@ -4470,20 +4523,21 @@
     let navTicking = false;
 
     function updateNavbar(){
-        const currentY = window.scrollY;
-        const scrollingDown = currentY > lastScrollY;
+        // Ignore elastic overscroll and stationary scroll events.
+        const currentY = Math.max(0, Math.min(window.scrollY,
+            document.documentElement.scrollHeight - window.innerHeight));
+        const scrollDelta = currentY - lastScrollY;
 
         // A hero tetején marad az eredeti, levegős fejléc.
         nav.classList.toggle("scrolled", currentY > 105);
 
-        // Lefelé görgetve eltűnik, hogy ne takarja a tartalmat.
-        // Felfelé görgetve azonnal visszajön.
-        if(currentY > 260 && scrollingDown && !document.body.classList.contains("menu-open")){
-            nav.classList.add("nav-hidden");
-            nav.classList.remove("nav-visible");
-        }else{
+        // Keep the current direction when a scroll event has no movement.
+        if(currentY <= 260 || document.body.classList.contains("menu-open")){
             nav.classList.remove("nav-hidden");
             nav.classList.add("nav-visible");
+        }else if(scrollDelta !== 0){
+            nav.classList.toggle("nav-hidden", scrollDelta > 0);
+            nav.classList.toggle("nav-visible", scrollDelta < 0);
         }
 
         if(currentY < 70){
@@ -4658,15 +4712,52 @@
     const revealElements=[...document.querySelectorAll('.reveal')];
     const reducedRevealMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if('IntersectionObserver' in window&&!reducedRevealMotion){
-    const revealObserver=new IntersectionObserver(entries=>{
-        entries.forEach(entry=>{
-        // Megfigyelés folyamatosan: kilépéskor eltűnik, visszatéréskor újra belép.
-        entry.target.classList.toggle('visible',entry.isIntersecting);
-        });
-    },{threshold:.1,rootMargin:'0px 0px -40px 0px'});
-    revealElements.forEach(element=>revealObserver.observe(element));
+        let revealFrame=0;
+        function updateReveals(){
+            revealFrame=0;
+            const rootBottom=document.documentElement.clientHeight-40;
+            // Read all geometry before changing classes. The observer sees the
+            // animated box; subtract its translation to use stable layout bounds.
+            const states=revealElements.map(element=>{
+                const rect=element.getBoundingClientRect();
+                const transform=getComputedStyle(element).transform;
+                const offset=transform==='none'?0:new DOMMatrixReadOnly(transform).m42;
+                const top=rect.top-offset;
+                const bottom=rect.bottom-offset;
+                const visible=element.classList.contains('visible');
+                // Enter at the original hidden position (+35px). Once entered,
+                // reverse only after the layout box leaves the observation area.
+                // This separates entry and exit boundaries without a timer.
+                const next=rect.height>0&&rect.width>0&&bottom>0&&
+                    top+(visible?0:35)<rootBottom;
+                return {element,visible,next};
+            });
+            states.forEach(({element,visible,next})=>{
+                if(visible!==next)element.classList.toggle('visible',next);
+            });
+        }
+        function scheduleReveals(){
+            if(!revealFrame)revealFrame=requestAnimationFrame(updateReveals);
+        }
+        // IntersectionObserver remains the visibility notifier. Scroll updates
+        // cover crossings masked by an in-flight transform; both share one frame.
+        const revealObserver=new IntersectionObserver(scheduleReveals,
+            {threshold:[0,.1],rootMargin:'0px 0px -40px 0px'});
+        revealElements.forEach(element=>revealObserver.observe(element));
+        window.addEventListener('scroll',scheduleReveals,{passive:true});
+        window.addEventListener('resize',scheduleReveals,{passive:true});
+        window.addEventListener('pageshow',scheduleReveals);
+        document.addEventListener('load',scheduleReveals,true);
+        if(document.fonts)document.fonts.ready.then(scheduleReveals);
+        // Content/filter changes can move triggers without scrolling. Only
+        // schedule a measurement: never rebuild observers or reset transitions.
+        if('ResizeObserver' in window){
+            const revealLayoutObserver=new ResizeObserver(scheduleReveals);
+            revealLayoutObserver.observe(document.body);
+        }
+        scheduleReveals();
     }else{
-    revealElements.forEach(element=>element.classList.add('visible'));
+        revealElements.forEach(element=>element.classList.add('visible'));
     }
 
 
@@ -4883,7 +4974,17 @@
         const back = document.getElementById('chatBookingBack');
         const title = document.getElementById('chatTitle');
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        function capturePanelPose(prefix){
+            const pose=getComputedStyle(panel);
+            for(const property of ['opacity','filter','transform']){
+                panel.style.setProperty('--chat-'+prefix+'-'+property,pose[property]);
+            }
+        }
         function openPanel() {
+            if(panel.classList.contains('is-closing'))capturePanelPose('enter');
+            else for(const property of ['opacity','filter','transform']){
+                panel.style.removeProperty('--chat-enter-'+property);
+            }
             panel.classList.remove('is-closing');
             panel.hidden = false;
             // Replays the opening animation if the panel is reopened while closing.
@@ -4894,6 +4995,8 @@
             aiButton.focus();
         }
         function closePanel() {
+            if(panel.hidden||panel.classList.contains('is-closing'))return;
+            capturePanelPose('leave');
             launcher.setAttribute('aria-expanded', 'false');
             launcher.focus();
             if (reducedMotion.matches) {
@@ -5085,32 +5188,56 @@
     const getChoice=()=>{try{return localStorage.getItem(key)}catch{return null}};
     const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
     let closing=false;
+    let closeVersion=0;
+    let previousBodyOverflow=null;
     function open(){
+        closeVersion++;
         if(closing){closing=false;layer.classList.remove('is-closing')}
         returnFocus=document.activeElement;
         layer.hidden=false;
         settings.hidden=true;
+        // Save once per lock, including individual longhands and priorities.
+        // Reopening during the closing animation must retain the original state.
+        if(previousBodyOverflow===null){
+            previousBodyOverflow=['overflow-x','overflow-y'].map(property=>({
+                property,
+                value:document.body.style.getPropertyValue(property),
+                priority:document.body.style.getPropertyPriority(property)
+            }));
+        }
         document.body.style.overflow='hidden';
-        reject.focus();
+        reject.focus({preventScroll:true});
     }
     function finishClose(){
         closing=false;
         layer.classList.remove('is-closing');
         layer.hidden=true;
-        settings.hidden=false;
-        document.body.style.overflow='';
+        if(previousBodyOverflow!==null){
+            document.body.style.removeProperty('overflow');
+            previousBodyOverflow.forEach(({property,value,priority})=>{
+                if(value)document.body.style.setProperty(property,value,priority);
+            });
+            previousBodyOverflow=null;
+        }
         if(returnFocus instanceof HTMLElement&&returnFocus.isConnected&&returnFocus!==document.body)returnFocus.focus({preventScroll:true});
         else settings.focus({preventScroll:true});
     }
     function close(){
+        settings.hidden=false;
         if(layer.hidden||closing)return;
         if(reducedMotion.matches){finishClose();return}
         closing=true;
+        const version=++closeVersion;
         layer.classList.add('is-closing');
+        const exits=layer.getAnimations({subtree:true}).filter(animation=>
+            animation.animationName==='fn-layer-out'||animation.animationName==='fn-cookie-out');
+        if(!exits.length){finishClose();return}
+        // Only dialog cleanup and scroll unlocking wait for the closing animation.
+        // Trigger visibility is restored synchronously above.
+        Promise.allSettled(exits.map(animation=>animation.finished)).then(()=>{
+            if(closing&&version===closeVersion)finishClose();
+        });
     }
-    layer.addEventListener('animationend',event=>{
-        if(event.target===layer&&event.animationName==='fn-layer-out'&&closing)finishClose();
-    });
     function choose(value){
         if(closing)return;
         try{localStorage.setItem(key,value)}catch{}
