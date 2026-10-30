@@ -2880,7 +2880,7 @@
     .chat-launcher-text small{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:1}
     @keyframes chat-pulse{0%{opacity:.7;transform:scale(1)}65%,100%{opacity:0;transform:scale(1.16)}}
     .chat-panel{position:absolute;right:0;bottom:78px;width:min(380px,calc(100vw - 32px));
-        max-height:calc(100dvh - 118px);overflow:auto;border:1px solid rgba(116,38,44,.17);
+        max-height:calc(100dvh - 118px);overflow:auto;scrollbar-gutter:stable;border:1px solid rgba(116,38,44,.17);
         border-radius:19px;background:var(--paper);box-shadow:0 28px 70px rgba(33,29,25,.23);
         transform-origin:90% 100%;animation:chat-enter 1.15s cubic-bezier(.16,1,.3,1) both;will-change:transform,opacity,filter}
     .chat-panel[hidden]{display:none}
@@ -3274,7 +3274,12 @@
         #footer .matched-footer-links a:nth-child(3),#footer .matched-footer-links a:nth-child(4){order:1;}
     }
 </style>
-    </head>
+
+    <style>
+    #chatGuidedBooking .chat-send:disabled{cursor:not-allowed;opacity:.6;transform:none;background:var(--wine)}
+    #chatGuidedBooking .chat-send:disabled::before{display:none}
+    </style>
+</head>
 
 
     <body>
@@ -4948,16 +4953,12 @@
                     <button class="booking-choice" type="button" id="chatAiBooking" aria-expanded="false" aria-controls="chatGuidedBooking"><strong>✦ AI segítségével</strong><small>Segítség a foglalási igény összeállításához</small></button>
                 </div>
                 <form id="chatGuidedBooking" class="chat-guided" hidden>
-                    <button class="chat-back" type="button" id="chatBookingBack" aria-label="Vissza a foglalási lehetőségekhez">← Vissza</button>
-                    <div class="chat-ai-bubble" role="status"><span aria-hidden="true">✦</span><p>Szia! Segítek összeállítani a foglalási kérésedet. Add meg az adataidat, és elkészítem az e-mailt. 🍕</p></div>
-                    <label for="chatBookingName">Név</label><input id="chatBookingName" name="name" type="text" autocomplete="name" required>
-                    <label for="chatBookingPhone">Telefonszám</label><input id="chatBookingPhone" name="phone" type="tel" autocomplete="tel" required>
-                    <label for="chatBookingDate">Dátum</label><input id="chatBookingDate" name="date" type="date" required>
-                    <label for="chatBookingTime">Időpont</label><select id="chatBookingTime" name="time" required><option value="">Válassz időpontot</option><option>17:00</option><option>17:30</option><option>18:00</option><option>18:30</option><option>19:00</option><option>19:30</option><option>20:00</option><option>20:30</option><option>21:00</option></select>
-                    <label for="chatBookingGuests">Vendégek száma</label><select id="chatBookingGuests" name="guests" required><option value="">Válassz létszámot</option><option>1 fő</option><option>2 fő</option><option>3 fő</option><option>4 fő</option><option>5 fő</option><option>6 fő</option><option>7+ fő</option></select>
-                    <label for="chatBookingNote">Megjegyzés (nem kötelező)</label><textarea id="chatBookingNote" name="note" placeholder="Allergia, különleges alkalom..."></textarea>
-                    <button class="chat-send" type="submit">Foglalási kérés előkészítése ↗</button>
-                    <small class="chat-note">A foglalás csak az e-mail elküldése és az étterem visszaigazolása után érvényes.</small>
+                    <button class="chat-back" type="button" id="chatBookingBack" aria-label="Vissza a foglalási lehetőségekhez"><svg aria-hidden="true" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M19 12H5m7-7-7 7 7 7"/></svg> Vissza</button>
+                    <div class="chat-ai-bubble" role="status"><span aria-hidden="true">🙂</span><p>Szia! Miben segíthetünk?</p></div>
+                    <p class="chat-note" id="chatAiAvailability">Az AI-asszisztens hamarosan elérhető.</p>
+                    <label for="chatAiMessage">ÜZENET</label>
+                    <textarea id="chatAiMessage" name="message" aria-describedby="chatAiAvailability" disabled></textarea>
+                    <button class="chat-send" type="submit" disabled aria-describedby="chatAiAvailability">ÜZENET KÜLDÉSE</button>
                 </form>
             </div>
         </section>
@@ -4974,6 +4975,35 @@
         const back = document.getElementById('chatBookingBack');
         const title = document.getElementById('chatTitle');
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        // Future n8n integration: configure a public webhook URL here, never credentials.
+        const N8N_WEBHOOK_URL = '';
+        // Proposed contract (the n8n workflow must implement it):
+        // POST application/json: { message: string, sessionId: string }
+        // Response application/json: { reply: string }
+        // Keep one sessionId per conversation across requests; this welcome-only view
+        // does not create a session, collect details, or invoke this function.
+        // Before enabling the composer, wire submission/reply rendering, loading and
+        // error states, and configure n8n CORS and server-side abuse protection.
+        async function requestAiReply(message, sessionId) {
+            if (!N8N_WEBHOOK_URL.trim()) throw new Error('AI integration is not configured.');
+            if (typeof message !== 'string' || !message.trim() ||
+                typeof sessionId !== 'string' || !sessionId.trim()) {
+                throw new Error('A message and sessionId are required.');
+            }
+            const response = await fetch(N8N_WEBHOOK_URL, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                credentials: 'omit',
+                body: JSON.stringify({message, sessionId})
+            });
+            if (!response.ok) throw new Error('AI service request failed.');
+            const result = await response.json();
+            if (typeof result.reply !== 'string' || !result.reply.trim()) {
+                throw new Error('AI service returned an invalid reply.');
+            }
+            return result.reply;
+        }
+
         function capturePanelPose(prefix){
             const pose=getComputedStyle(panel);
             for(const property of ['opacity','filter','transform']){
@@ -4992,7 +5022,7 @@
             panel.offsetWidth;
             panel.style.animation = '';
             launcher.setAttribute('aria-expanded', 'true');
-            aiButton.focus();
+            (guided.hidden ? aiButton : back).focus();
         }
         function closePanel() {
             if(panel.hidden||panel.classList.contains('is-closing'))return;
@@ -5056,8 +5086,8 @@
             try {
                 if (!reducedMotion.matches) {
                     await Promise.allSettled([guided.animate([
-                        {opacity:1,transform:'translateY(0) scale(1)'},
-                        {opacity:0,transform:'translateY(-10px) scale(.985)'}
+                        {opacity:1,transform:'translateY(0)'},
+                        {opacity:0,transform:'translateY(-10px)'}
                     ],{duration:320,easing:'ease-in',fill:'forwards'}).finished]);
                 }
                 if (version !== transitionVersion) return;
@@ -5098,14 +5128,14 @@
             if (returning) return;
             returning = true;
             const version = ++transitionVersion;
-            const oldHeight = panel.offsetHeight;
+
             const duration = 820;
             const easing = 'cubic-bezier(.22,1,.36,1)';
             try {
                 if (!reducedMotion.matches) {
                     const leaving = [greeting,choices].map((element,index) => element.animate([
-                        {opacity:1,transform:'translateY(0)'},
-                        {opacity:0,transform:'translateY(-10px) scale(.985)'}
+                        {opacity:1},
+                        {opacity:0,transform:'translateY(-10px)'}
                     ],{duration:320,delay:index * 35,easing:'ease-in',fill:'forwards'}));
                     await Promise.allSettled(leaving.map(animation=>animation.finished));
                     leaving.forEach(animation=>animation.cancel());
@@ -5116,23 +5146,16 @@
                 guided.hidden = false;
                 aiButton.setAttribute('aria-expanded', 'true');
                 title.textContent = 'Segítek a foglalásban';
-                guided.querySelector('input[name="date"]').min = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+
                 panel.scrollTop = 0;
                 if (!reducedMotion.matches) {
-                    const maxHeight = parseFloat(getComputedStyle(panel).maxHeight);
-                    const newHeight = Math.min(panel.scrollHeight, maxHeight);
-                    panel.style.height = oldHeight + 'px';
-                    panel.style.overflow = 'hidden';
-                    const resize = panel.animate([
-                        {height:oldHeight + 'px'},
-                        {height:newHeight + 'px'}
-                    ],{duration,easing,fill:'forwards'});
+
                     const reveal = guided.animate([
-                        {opacity:0,transform:'translateY(14px)'},
-                        {opacity:1,transform:'translateY(0)'}
+                        {opacity:0},
+                        {opacity:1}
                     ],{duration:duration - 70,easing,fill:'both'});
-                    await Promise.allSettled([resize.finished,reveal.finished]);
-                    resize.cancel();
+                    await Promise.allSettled([reveal.finished]);
+
                     reveal.cancel();
                 }
             } finally {
@@ -5143,22 +5166,10 @@
                 back.focus({preventScroll:true});
             }
         });
-        back.addEventListener('click', showChoices);
+back.addEventListener('click', showChoices);
         guided.addEventListener('submit', event => {
+            // Welcome-only mode: block even programmatic form submissions.
             event.preventDefault();
-            if (!guided.reportValidity()) return;
-            const data = new FormData(guided);
-            const body = [
-                'Sziasztok! Szeretnék asztalt foglalni.', '',
-                'Név: ' + data.get('name'),
-                'Telefonszám: ' + data.get('phone'),
-                'Dátum: ' + data.get('date'),
-                'Időpont: ' + data.get('time'),
-                'Vendégek száma: ' + data.get('guests'),
-                'Megjegyzés: ' + (data.get('note') || '—'), '',
-                'Kérem, igazoljátok vissza a foglalást.'
-            ].join('\n');
-            location.href = 'mailto:ciao@forneriva.hu?subject=' + encodeURIComponent('Asztalfoglalási kérés – FORNERIVA') + '&body=' + encodeURIComponent(body);
         });
     })();
     </script>

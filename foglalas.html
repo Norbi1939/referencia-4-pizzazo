@@ -638,6 +638,19 @@
 
 
 
+    /* Footer home button matches index.html's matched footer links. */
+    footer .footer-inner{flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center}
+    footer .footer-inner>span{text-transform:none}
+    footer .footer-inner .footer-home-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:12px 18px;border:1px solid var(--wine);border-radius:4px;background:var(--wine);color:var(--cream);font-family:var(--sans);font-size:.8125rem;font-weight:600;line-height:1.3;letter-spacing:normal;text-transform:none;white-space:nowrap;transition:background-color .25s ease,border-color .25s ease}
+    footer .footer-inner .footer-home-button:focus-visible{outline:2px solid var(--wine);outline-offset:3px}
+    @media(hover:hover) and (pointer:fine){footer .footer-inner .footer-home-button:hover{background:var(--wine-dark);border-color:var(--wine-dark)}}
+    @media(prefers-reduced-motion:reduce){footer .footer-inner .footer-home-button{transition:none!important}}
+    /* Header home link matches the existing footer home button. */
+    .topbar .back-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:12px 18px;border:1px solid var(--wine);border-radius:4px;background:var(--wine);color:var(--cream);font-family:var(--sans);font-size:.8125rem;font-weight:600;line-height:1.3;letter-spacing:normal;text-transform:none;white-space:nowrap;gap:0;transition:background-color .25s ease,border-color .25s ease}
+    .topbar .back-link span{font:inherit;margin-right:.35em;transition:none;transform:none}
+    .topbar .back-link:focus-visible{outline:2px solid var(--wine);outline-offset:3px}
+    @media(hover:hover) and (pointer:fine){.topbar .back-link:hover{background:var(--wine-dark);border-color:var(--wine-dark)}}
+    @media(prefers-reduced-motion:reduce){.topbar .back-link{transition:none!important}}
   </style>
 
 
@@ -806,7 +819,7 @@
 
 
 
-  <footer><div class="shell footer-inner"><span>© <span id="year"></span> FORNERIVA · Pizza &amp; Fuoco</span><a href="index.html">Vissza a főoldalra ↗</a></div></footer>
+  <footer><div class="shell footer-inner"><a class="footer-home-button" href="index.html">Vissza a főoldalra ↗</a><span>© 2026 FORNERIVA · Pizza &amp; Fuoco</span></div></footer>
 
 
 
@@ -838,7 +851,7 @@
 
 
 
-    document.getElementById('year').textContent=new Date().getFullYear();
+
 
 
 
