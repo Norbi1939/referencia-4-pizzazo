@@ -3,6 +3,7 @@
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FORNERIVA – Pizza &amp; Fuoco. Ismerd meg az étlapot, fedezd fel az étterem hangulatát, és találd meg a kapcsolatfelvételi és asztalfoglalási lehetőségeket.">
 
     <title>FORNERIVA — Pizza & Fuoco</title>
 
@@ -4615,6 +4616,15 @@
         }
     );
 
+
+    document.addEventListener('keydown', event=>{
+        if(event.key!=='Escape'||!mobileMenu.classList.contains('active'))return;
+        mobileMenu.classList.remove('active');
+        menuBtn.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        menuBtn.setAttribute('aria-expanded','false');
+        menuBtn.focus({preventScroll:true});
+    });
 
     mobileLinks.forEach(
         link=>{

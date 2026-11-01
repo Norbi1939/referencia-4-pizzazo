@@ -651,6 +651,8 @@
     .topbar .back-link:focus-visible{outline:2px solid var(--wine);outline-offset:3px}
     @media(hover:hover) and (pointer:fine){.topbar .back-link:hover{background:var(--wine-dark);border-color:var(--wine-dark)}}
     @media(prefers-reduced-motion:reduce){.topbar .back-link{transition:none!important}}
+    @media(max-width:360px){.topbar .topbar-inner{flex-wrap:wrap;gap:12px;padding-block:12px}.topbar .back-link{margin-left:auto}}
+    @media(max-width:375px){.intro h1{font-size:clamp(3rem,15vw,5.8rem)}.form-topline h2{font-size:clamp(2rem,10vw,2.8rem)}}
   </style>
 
 
@@ -859,7 +861,35 @@
 
 
 
-    date.min=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+    const nameField=document.getElementById('name');
+    const phone=document.getElementById('phone');
+    const time=document.getElementById('time');
+
+    function validateBooking(){
+      const now=new Date();
+      date.min=new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().slice(0,10);
+      nameField.setCustomValidity(nameField.value.trim()?'':'Kérjük, add meg a nevedet; a név nem állhat csak szóközökből.');
+      const phoneValue=phone.value.trim();
+      const digits=phoneValue.replace(/\D/g,'');
+      const validPhone=/^\+?[\d\s().-]+$/.test(phoneValue)&&digits.length>=7&&digits.length<=15&&/[1-9]/.test(digits);
+      phone.setCustomValidity(validPhone?'':'Kérjük, adj meg érvényes telefonszámot 7–15 számjeggyel. A + előhívó, szóköz, kötőjel és zárójel használható.');
+      time.setCustomValidity('');
+      if(date.value&&time.value){
+        const [year,month,day]=date.value.split('-').map(Number);
+        const [hours,minutes]=time.value.split(':').map(Number);
+        const appointment=new Date(year,month-1,day,hours,minutes);
+        if(appointment.getTime()<=now.getTime()){
+          time.setCustomValidity('Ez az időpont már elmúlt. Kérjük, válassz jövőbeli dátumot és időpontot.');
+        }
+      }
+    }
+    // Refresh time-sensitive constraints before showing native validation messages.
+    form.noValidate=true;
+    [nameField,phone,date,time].forEach(field=>{
+      field.addEventListener('input',validateBooking);
+      field.addEventListener('change',validateBooking);
+    });
+    validateBooking();
 
 
 
@@ -883,6 +913,7 @@
 
 
 
+      validateBooking();
       if(!form.reportValidity()) return;
 
 
