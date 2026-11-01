@@ -3143,6 +3143,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
     <style>.experience .furnace-title{font-family:"Lora",Georgia,serif}</style>
     <style>
+    /* Keep intermediate desktop hero content clear of the photograph blend. */
+    @media (min-width:851px) and (max-width:1336px){
+        .hero-left{z-index:5;}
+    }
+    @media (min-width:851px) and (max-width:1110px){
+        .hero-stats{width:min(430px,100%);grid-template-columns:repeat(2,minmax(0,1fr));row-gap:28px;}
+        .hero-stat:nth-child(3){border-left:0;}
+    }
+    @media (min-width:851px) and (max-width:1015px){
+        .hero-buttons{flex-wrap:wrap;}
+        .hero-stats{margin-top:24px;}
+    }
     /* Mobile hero: readable captions over the photograph, without the fallback scene. */
     @media (max-width:850px){
         .hero-visual{
